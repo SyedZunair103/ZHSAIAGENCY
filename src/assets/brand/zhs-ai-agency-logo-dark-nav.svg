@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 50" fill="none">
+  <defs>
+    <linearGradient id="logoGradDarkNav" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#818cf8"/>
+      <stop offset="50%" stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="5" width="40" height="40" rx="10" fill="url(#logoGradDarkNav)" opacity="0.12"/>
+  <rect x="2" y="5" width="40" height="40" rx="10" stroke="url(#logoGradDarkNav)" stroke-width="1.5" fill="none"/>
+  <text x="22" y="32" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="800" fill="url(#logoGradDarkNav)" text-anchor="middle">Z</text>
+  <text x="52" y="28" font-family="Inter, system-ui, sans-serif" font-size="20" font-weight="800" fill="#f5f5ff" letter-spacing="-0.5">ZHS</text>
+  <text x="108" y="28" font-family="Inter, system-ui, sans-serif" font-size="11" font-weight="600" fill="#818cf8" letter-spacing="3">AI AGENCY</text>
+</svg>
