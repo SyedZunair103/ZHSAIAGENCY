@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Bot, Code2, Palette, Box, TrendingUp, ArrowRight } from "lucide-react";
 import ScrollReveal from "../components/animations/ScrollReveal";
@@ -6,8 +7,29 @@ import SectionHeading from "../components/ui/SectionHeading";
 import PageHero from "../components/ui/PageHero";
 import CtaSection from "../components/ui/CtaSection";
 import Seo from "../components/ui/Seo";
+import { supabase } from "../lib/supabase";
+import { getIcon } from "../lib/icons";
 
-const solutions = [
+interface DbService {
+  id: string;
+  title: string;
+  subtitle: string;
+  slug: string;
+  description: string | null;
+  icon: string | null;
+  display_order: number;
+  is_published: boolean;
+}
+
+const colorMap: Record<string, { color: string; hoverColor: string }> = {
+  "AI Automation": { color: "bg-zhs-accent/10 text-zhs-accent", hoverColor: "group-hover:bg-zhs-accent/20" },
+  Technology: { color: "bg-zhs-blue/10 text-zhs-blue", hoverColor: "group-hover:bg-zhs-blue/20" },
+  Creative: { color: "bg-zhs-violet/10 text-zhs-violet", hoverColor: "group-hover:bg-zhs-violet/20" },
+  "3D Studio": { color: "bg-zhs-cyan/10 text-zhs-cyan", hoverColor: "group-hover:bg-zhs-cyan/20" },
+  "Digital Growth": { color: "bg-zhs-emerald/10 text-zhs-emerald", hoverColor: "group-hover:bg-zhs-emerald/20" },
+};
+
+const fallbackSolutions = [
   {
     icon: Bot,
     title: "AI Automation",
@@ -60,7 +82,54 @@ const solutions = [
   },
 ];
 
+const pathMap: Record<string, string> = {
+  "ai-automation": "/ai-automation",
+  technology: "/technology",
+  creative: "/creative",
+  "3d-studio": "/3d-studio",
+  "digital-growth": "/digital-growth",
+};
+
 export default function Solutions() {
+  const [solutions, setSolutions] = useState(fallbackSolutions);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      const { data, error } = await supabase
+        .from("services")
+        .select("id, title, subtitle, slug, description, icon, display_order, is_published")
+        .eq("is_published", true)
+        .order("display_order", { ascending: true });
+
+      if (error || !data || data.length === 0) {
+        setSolutions(fallbackSolutions);
+      } else {
+        const mapped = data.map((s: DbService, i: number) => {
+          const Icon = getIcon(s.icon);
+          const colors = colorMap[s.title] ?? {
+            color: "bg-zhs-accent/10 text-zhs-accent",
+            hoverColor: "group-hover:bg-zhs-accent/20",
+          };
+          const fallback = fallbackSolutions[i] ?? fallbackSolutions[0];
+          return {
+            icon: Icon,
+            title: s.title,
+            path: pathMap[s.slug] ?? `/solutions`,
+            description: s.description ?? s.subtitle,
+            color: colors.color,
+            hoverColor: colors.hoverColor,
+            tag: fallback?.tag ?? null,
+          };
+        });
+        setSolutions(mapped);
+      }
+      setIsLoading(false);
+    };
+
+    fetchServices();
+  }, []);
+
   return (
     <>
       <Seo
@@ -89,40 +158,77 @@ export default function Solutions() {
             />
           </ScrollReveal>
 
-          <div className="mx-auto mt-16 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {solutions.map((solution, i) => {
-              const Icon = solution.icon;
-              return (
-                <ScrollReveal key={solution.path} delay={i * 80}>
-                  <Link to={solution.path} className="group block h-full">
-                    <div className="card-premium relative flex h-full flex-col p-8 transition-all duration-300 group-hover:-translate-y-1">
-                      {solution.tag && (
-                        <span className="absolute right-4 top-4 rounded-full bg-zhs-accent/10 px-3 py-1 text-[11px] font-semibold text-zhs-accent">
-                          {solution.tag}
-                        </span>
-                      )}
+          {!isLoading ? (
+            <div className="mx-auto mt-16 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {solutions.map((solution, i) => {
+                const Icon = solution.icon;
+                return (
+                  <ScrollReveal key={solution.title} delay={i * 80}>
+                    <Link to={solution.path} className="group block h-full">
+                      <div className="card-premium relative flex h-full flex-col p-8 transition-all duration-300 group-hover:-translate-y-1">
+                        {solution.tag && (
+                          <span className="absolute right-4 top-4 rounded-full bg-zhs-accent/10 px-3 py-1 text-[11px] font-semibold text-zhs-accent">
+                            {solution.tag}
+                          </span>
+                        )}
 
-                      <div
-                        className={`mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-300 ${solution.color} ${solution.hoverColor}`}
-                      >
-                        <Icon className="h-6 w-6" />
+                        <div
+                          className={`mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-300 ${solution.color} ${solution.hoverColor}`}
+                        >
+                          <Icon className="h-6 w-6" />
+                        </div>
+
+                        <h3 className="dark:text-zhs-white text-slate-900 text-lg font-bold">{solution.title}</h3>
+                        <p className="dark:text-zhs-muted text-slate-500 mt-3 flex-1 text-sm leading-relaxed">
+                          {solution.description}
+                        </p>
+
+                        <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-zhs-accent transition-all duration-300 group-hover:gap-3">
+                          Explore
+                          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        </div>
                       </div>
+                    </Link>
+                  </ScrollReveal>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="mx-auto mt-16 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {fallbackSolutions.map((solution, i) => {
+                const Icon = solution.icon;
+                return (
+                  <ScrollReveal key={solution.path} delay={i * 80}>
+                    <Link to={solution.path} className="group block h-full">
+                      <div className="card-premium relative flex h-full flex-col p-8 transition-all duration-300 group-hover:-translate-y-1">
+                        {solution.tag && (
+                          <span className="absolute right-4 top-4 rounded-full bg-zhs-accent/10 px-3 py-1 text-[11px] font-semibold text-zhs-accent">
+                            {solution.tag}
+                          </span>
+                        )}
 
-                      <h3 className="dark:text-zhs-white text-slate-900 text-lg font-bold">{solution.title}</h3>
-                      <p className="dark:text-zhs-muted text-slate-500 mt-3 flex-1 text-sm leading-relaxed">
-                        {solution.description}
-                      </p>
+                        <div
+                          className={`mb-5 inline-flex h-12 w-12 items-center justify-center rounded-xl transition-colors duration-300 ${solution.color} ${solution.hoverColor}`}
+                        >
+                          <Icon className="h-6 w-6" />
+                        </div>
 
-                      <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-zhs-accent transition-all duration-300 group-hover:gap-3">
-                        Explore
-                        <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        <h3 className="dark:text-zhs-white text-slate-900 text-lg font-bold">{solution.title}</h3>
+                        <p className="dark:text-zhs-muted text-slate-500 mt-3 flex-1 text-sm leading-relaxed">
+                          {solution.description}
+                        </p>
+
+                        <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-zhs-accent transition-all duration-300 group-hover:gap-3">
+                          Explore
+                          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </ScrollReveal>
-              );
-            })}
-          </div>
+                    </Link>
+                  </ScrollReveal>
+                );
+              })}
+            </div>
+          )}
 
           <ScrollReveal delay={500}>
             <div className="mx-auto mt-16 max-w-2xl rounded-2xl dark:border-zhs-border dark:bg-zhs-dark-2/60 border-slate-200 bg-white p-8 text-center backdrop-blur-sm">

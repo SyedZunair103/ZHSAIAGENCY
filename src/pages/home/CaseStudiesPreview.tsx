@@ -1,10 +1,20 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import ScrollReveal from "../../components/animations/ScrollReveal";
 import Container from "../../components/ui/Container";
 import SectionHeading from "../../components/ui/SectionHeading";
+import { supabase } from "../../lib/supabase";
 
-const caseStudies = [
+interface DbCaseStudy {
+  id: string;
+  title: string;
+  subtitle: string;
+  slug: string;
+  category: string;
+}
+
+const fallbackCaseStudies = [
   { title: "AI Customer Support System", category: "AI Automation", status: "Coming Soon" },
   { title: "Automated Lead Qualification", category: "Automation", status: "Coming Soon" },
   { title: "SaaS Product Development", category: "Technology", status: "Coming Soon" },
@@ -13,6 +23,34 @@ const caseStudies = [
 ];
 
 export default function CaseStudiesPreview() {
+  const [caseStudies, setCaseStudies] = useState(fallbackCaseStudies);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCaseStudies = async () => {
+      const { data, error } = await supabase
+        .from("case_studies")
+        .select("id, title, subtitle, slug, category")
+        .eq("is_published", true)
+        .order("display_order", { ascending: true })
+        .limit(5);
+
+      if (error || !data || data.length === 0) {
+        setCaseStudies(fallbackCaseStudies);
+      } else {
+        const mapped = data.map((cs: DbCaseStudy) => ({
+          title: cs.title,
+          category: cs.category,
+          status: "View Details",
+        }));
+        setCaseStudies(mapped);
+      }
+      setIsLoading(false);
+    };
+
+    fetchCaseStudies();
+  }, []);
+
   return (
     <section className="relative py-20 md:py-28 lg:py-32">
       <Container>
@@ -25,7 +63,7 @@ export default function CaseStudiesPreview() {
         </ScrollReveal>
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {caseStudies.map((cs, i) => (
+          {(isLoading ? fallbackCaseStudies : caseStudies).map((cs, i) => (
             <ScrollReveal key={cs.title} delay={i * 60}>
               <div className="group card-premium h-full">
                 <div className="flex h-32 items-center justify-center rounded-xl border border-dashed dark:border-zhs-border border-slate-200 dark:bg-zhs-dark-3/50 bg-slate-50">

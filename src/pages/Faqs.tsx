@@ -1,12 +1,19 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ChevronDown } from "lucide-react";
 import Seo from "../components/ui/Seo";
 import PageHero from "../components/ui/PageHero";
 import Container from "../components/ui/Container";
 import ScrollReveal from "../components/animations/ScrollReveal";
 import CtaSection from "../components/ui/CtaSection";
+import { supabase } from "../lib/supabase";
 
-const faqs = [
+interface DbFaq {
+  id?: string;
+  question: string;
+  answer: string;
+}
+
+const fallbackFaqs: DbFaq[] = [
   {
     question: "What does ZHS AI Agency do?",
     answer:
@@ -128,6 +135,9 @@ function FaqItem({
 
 export default function Faqs() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [faqs, setFaqs] = useState<DbFaq[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dbFailed, setDbFailed] = useState(false);
 
   const toggle = useCallback(
     (index: number) => {
@@ -135,6 +145,30 @@ export default function Faqs() {
     },
     []
   );
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      const { data, error } = await supabase
+        .from("faqs")
+        .select("id, question, answer")
+        .eq("is_published", true)
+        .order("display_order", { ascending: true });
+
+      if (error || !data) {
+        setDbFailed(true);
+        setFaqs(fallbackFaqs);
+      } else if (data.length === 0) {
+        setFaqs([]);
+      } else {
+        setFaqs(data as DbFaq[]);
+      }
+      setIsLoading(false);
+    };
+
+    fetchFaqs();
+  }, []);
+
+  const displayFaqs = dbFailed ? fallbackFaqs : faqs;
 
   return (
     <>
@@ -152,19 +186,31 @@ export default function Faqs() {
 
       <section className="relative py-20 md:py-28">
         <Container>
-          <div className="mx-auto max-w-3xl space-y-3">
-            {faqs.map((faq, i) => (
-              <ScrollReveal key={i} delay={i * 40}>
-                <FaqItem
-                  question={faq.question}
-                  answer={faq.answer}
-                  isOpen={openIndex === i}
-                  onToggle={() => toggle(i)}
-                  id={`faq-${i}`}
-                />
-              </ScrollReveal>
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="h-8 w-8 animate-spin rounded-full border-2 dark:border-zhs-border border-slate-200 border-t-zhs-accent" />
+            </div>
+          ) : displayFaqs.length === 0 ? (
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="dark:text-zhs-muted text-slate-500">
+                No FAQs available yet. Check back soon.
+              </p>
+            </div>
+          ) : (
+            <div className="mx-auto max-w-3xl space-y-3">
+              {displayFaqs.map((faq, i) => (
+                <ScrollReveal key={faq.id || `fallback-${i}`} delay={i * 40}>
+                  <FaqItem
+                    question={faq.question}
+                    answer={faq.answer}
+                    isOpen={openIndex === i}
+                    onToggle={() => toggle(i)}
+                    id={`faq-${i}`}
+                  />
+                </ScrollReveal>
+              ))}
+            </div>
+          )}
         </Container>
       </section>
 

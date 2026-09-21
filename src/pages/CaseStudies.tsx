@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Bot, Users, Code2, Box, TrendingUp } from "lucide-react";
 import ScrollReveal from "../components/animations/ScrollReveal";
 import Container from "../components/ui/Container";
@@ -5,8 +6,33 @@ import { SectionWrapper } from "../components/ui/SectionHeading";
 import Seo from "../components/ui/Seo";
 import PageHero from "../components/ui/PageHero";
 import CtaSection from "../components/ui/CtaSection";
+import { supabase } from "../lib/supabase";
+import { getIcon } from "../lib/icons";
 
-const projects = [
+interface DbCaseStudy {
+  id: string;
+  title: string;
+  subtitle: string;
+  slug: string;
+  category: string;
+  challenge: string;
+  solution: string;
+  capabilities: string[] | unknown;
+  tech_stack: string[] | unknown;
+  business_application: string | null;
+  display_order: number;
+  is_published: boolean;
+}
+
+const categoryColorMap: Record<string, string> = {
+  "AI Automation": "bg-zhs-accent/10 text-zhs-accent",
+  Technology: "bg-zhs-blue/10 text-zhs-blue",
+  Creative: "bg-zhs-violet/10 text-zhs-violet",
+  "3D Studio": "bg-zhs-cyan/10 text-zhs-cyan",
+  "Digital Growth": "bg-zhs-emerald/10 text-zhs-emerald",
+};
+
+const fallbackProjects = [
   {
     icon: Bot,
     title: "AI Customer Support System",
@@ -79,7 +105,56 @@ const projects = [
   },
 ];
 
+function toArray(val: string[] | unknown): string[] {
+  if (Array.isArray(val)) return val as string[];
+  if (typeof val === "string") {
+    try {
+      const parsed = JSON.parse(val);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      // not JSON
+    }
+  }
+  return [];
+}
+
 export default function CaseStudies() {
+  const [projects, setProjects] = useState(fallbackProjects);
+
+  useEffect(() => {
+    const fetchCaseStudies = async () => {
+      const { data, error } = await supabase
+        .from("case_studies")
+        .select("*")
+        .eq("is_published", true)
+        .order("display_order", { ascending: true });
+
+      if (error || !data || data.length === 0) {
+        setProjects(fallbackProjects);
+      } else {
+        const mapped = data.map((cs: DbCaseStudy) => {
+          const Icon = getIcon(null);
+          return {
+            icon: Icon,
+            title: cs.title,
+            category: cs.category,
+            categoryColor: categoryColorMap[cs.category] ?? "bg-zhs-accent/10 text-zhs-accent",
+            projectType: "Case Study",
+            challenge: cs.challenge,
+            solution: cs.solution,
+            capabilities: toArray(cs.capabilities),
+            techStack: toArray(cs.tech_stack),
+            businessApplication: cs.business_application ?? "",
+          };
+        });
+        setProjects(mapped);
+      }
+
+    };
+
+    fetchCaseStudies();
+  }, []);
+
   return (
     <>
       <Seo

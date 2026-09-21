@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
-import { siteConfig } from "../../config/site";
+import { useSiteSettingsContext } from "../../context/SiteSettingsContext";
 import Container from "../ui/Container";
 import Logo from "../brand/Logo";
 
@@ -26,6 +26,11 @@ const footerNav = {
 };
 
 export default function Footer() {
+  const { get } = useSiteSettingsContext();
+  const siteName = get("site_name", "ZHS AI Agency");
+  const siteEmail = get("contact_email", "zhsaiagency@gmail.com");
+  const siteDescription = get("description", "ZHS AI Agency builds intelligent AI systems, automation workflows, digital products, creative experiences and growth solutions for modern businesses.");
+
   return (
     <footer className="relative border-t dark:border-zhs-border dark:bg-zhs-black border-slate-200 bg-slate-50">
       <Container>
@@ -35,7 +40,7 @@ export default function Footer() {
               <Logo />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed dark:text-zhs-muted text-slate-500">
-              {siteConfig.description}
+              {siteDescription}
             </p>
             <p className="mt-3 text-xs dark:text-zhs-muted/60 text-slate-400">
               AI &bull; Automation &bull; Technology &bull; Creative &bull; Growth
@@ -74,16 +79,16 @@ export default function Footer() {
               ))}
             </ul>
             <div className="mt-5">
-              <a href={`mailto:${siteConfig.email}`} className="inline-flex items-center gap-2 text-sm dark:text-zhs-muted dark:hover:text-zhs-white text-slate-500 hover:text-slate-900 transition-colors">
+              <a href={`mailto:${siteEmail}`} className="inline-flex items-center gap-2 text-sm dark:text-zhs-muted dark:hover:text-zhs-white text-slate-500 hover:text-slate-900 transition-colors">
                 <Mail className="h-4 w-4" />
-                {siteConfig.email}
+                {siteEmail}
               </a>
             </div>
           </div>
         </div>
 
         <div className="border-t dark:border-zhs-border border-slate-200 py-6 text-center text-xs dark:text-zhs-muted/50 text-slate-400">
-          &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+          &copy; {new Date().getFullYear()} {siteName}. All rights reserved.
         </div>
       </Container>
     </footer>

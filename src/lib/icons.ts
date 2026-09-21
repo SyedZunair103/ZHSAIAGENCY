@@ -1,0 +1,55 @@
+import {
+  Bot,
+  Code2,
+  Palette,
+  Box,
+  TrendingUp,
+  Users,
+  Brain,
+  Cpu,
+  Globe,
+  Smartphone,
+  ShoppingCart,
+  BarChart3,
+  Megaphone,
+  Search,
+  PenTool,
+  Video,
+  Camera,
+  Lightbulb,
+  Zap,
+  Settings,
+  MessageSquare,
+  Headphones,
+  type LucideIcon,
+} from "lucide-react";
+
+const iconMap: Record<string, LucideIcon> = {
+  Bot,
+  Code2,
+  Palette,
+  Box,
+  TrendingUp,
+  Users,
+  Brain,
+  Cpu,
+  Globe,
+  Smartphone,
+  ShoppingCart,
+  BarChart3,
+  Megaphone,
+  Search,
+  PenTool,
+  Video,
+  Camera,
+  Lightbulb,
+  Zap,
+  Settings,
+  MessageSquare,
+  Headphones,
+};
+
+export function getIcon(name: string | null): LucideIcon {
+  if (!name) return Bot;
+  return iconMap[name] ?? Bot;
+}

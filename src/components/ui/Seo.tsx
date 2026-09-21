@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { siteConfig } from "../../config/site";
+import { useSiteSettingsContext } from "../../context/SiteSettingsContext";
 
 interface SeoProps {
   title: string;
@@ -22,7 +22,9 @@ function getOrCreateMeta(name: string, attribute: string): HTMLMetaElement {
 
 export default function Seo({ title, description, path, ogImage }: SeoProps) {
   const location = useLocation();
-  const siteUrl = siteConfig.siteUrl;
+  const { get } = useSiteSettingsContext();
+  const siteUrl = import.meta.env.VITE_SITE_URL || "";
+  const siteName = get("site_name", "ZHS AI Agency");
   const currentPath = path || location.pathname;
   const canonicalUrl = siteUrl ? `${siteUrl}${currentPath}` : "";
   const ogImageUrl = ogImage
@@ -36,7 +38,7 @@ export default function Seo({ title, description, path, ogImage }: SeoProps) {
     getOrCreateMeta("og:title", "property").setAttribute("content", title);
     getOrCreateMeta("og:description", "property").setAttribute("content", description);
     getOrCreateMeta("og:type", "property").setAttribute("content", "website");
-    getOrCreateMeta("og:site_name", "property").setAttribute("content", siteConfig.name);
+    getOrCreateMeta("og:site_name", "property").setAttribute("content", siteName);
 
     if (canonicalUrl) {
       getOrCreateMeta("og:url", "property").setAttribute("content", canonicalUrl);
@@ -57,7 +59,7 @@ export default function Seo({ title, description, path, ogImage }: SeoProps) {
     getOrCreateMeta("twitter:card", "name").setAttribute("content", "summary_large_image");
     getOrCreateMeta("twitter:title", "name").setAttribute("content", title);
     getOrCreateMeta("twitter:description", "name").setAttribute("content", description);
-  }, [title, description, canonicalUrl, ogImageUrl, location.pathname, currentPath]);
+  }, [title, description, canonicalUrl, ogImageUrl, location.pathname, currentPath, siteName]);
 
   return null;
 }

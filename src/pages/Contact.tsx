@@ -5,13 +5,15 @@ import {
   MapPin,
   Send,
   ArrowRight,
+  CheckCircle,
 } from "lucide-react";
 import ScrollReveal from "../components/animations/ScrollReveal";
 import Container from "../components/ui/Container";
 import PageHero from "../components/ui/PageHero";
 import CtaSection from "../components/ui/CtaSection";
 import Seo from "../components/ui/Seo";
-import { siteConfig } from "../config/site";
+import { useSiteSettingsContext } from "../context/SiteSettingsContext";
+import { submitLead } from "../hooks/useLeads";
 
 const serviceOptions = [
   "AI Agents",
@@ -105,9 +107,12 @@ function validate(data: FormData): FormErrors {
 }
 
 export default function Contact() {
+  const { get } = useSiteSettingsContext();
+  const siteEmail = get("contact_email", "zhsaiagency@gmail.com");
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [errors, setErrors] = useState<FormErrors>({});
-  const [showEmailCta, setShowEmailCta] = useState(false);
+  const [formState, setFormState] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleChange = (
     e: ChangeEvent<
@@ -122,7 +127,7 @@ export default function Contact() {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const validationErrors = validate(formData);
@@ -131,7 +136,23 @@ export default function Contact() {
       return;
     }
 
-    setShowEmailCta(true);
+    setFormState("submitting");
+    try {
+      await submitLead({
+        full_name: formData.fullName.trim(),
+        email: formData.email.trim(),
+        company: formData.company.trim() || null,
+        phone: formData.phone.trim() || null,
+        country: formData.country.trim(),
+        service: formData.service,
+        budget: formData.budget || null,
+        description: formData.description.trim(),
+      });
+      setFormState("success");
+    } catch (err) {
+      setErrorMsg(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setFormState("error");
+    }
   };
 
   const inputBase =
@@ -166,45 +187,54 @@ export default function Contact() {
           <div className="grid gap-12 lg:grid-cols-5">
             {/* Form Column */}
             <ScrollReveal className="lg:col-span-3">
-              {showEmailCta ? (
+              {formState === "success" ? (
                 <div className="card-premium p-10 text-center md:p-14">
-                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-zhs-accent/10 text-zhs-accent">
+                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-zhs-emerald/10 text-zhs-emerald">
+                    <CheckCircle className="h-8 w-8" />
+                  </div>
+                  <h2 className="dark:text-zhs-white text-slate-900 text-2xl font-bold sm:text-3xl">
+                    Message Received!
+                  </h2>
+                  <p className="dark:text-zhs-muted text-slate-500 mt-4 text-lg max-w-md mx-auto">
+                    Thank you for reaching out. We've received your project details and will get back to you within 24 hours.
+                  </p>
+                  <div className="mt-8">
+                    <button
+                      onClick={() => {
+                        setFormState("idle");
+                        setFormData(initialFormData);
+                      }}
+                      className="text-sm text-zhs-accent hover:text-zhs-accent-3 transition-colors"
+                    >
+                      Submit another inquiry
+                    </button>
+                  </div>
+                </div>
+              ) : formState === "error" ? (
+                <div className="card-premium p-10 text-center md:p-14">
+                  <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-zhs-rose/10 text-zhs-rose">
                     <Mail className="h-8 w-8" />
                   </div>
                   <h2 className="dark:text-zhs-white text-slate-900 text-2xl font-bold sm:text-3xl">
-                    Email Us to Get Started
+                    Something Went Wrong
                   </h2>
                   <p className="dark:text-zhs-muted text-slate-500 mt-4 text-lg max-w-md mx-auto">
-                    For the fastest response, send us an email directly with your project details.
+                    {errorMsg}
                   </p>
                   <div className="mt-8 flex flex-col items-center gap-3">
-                    <a
-                      href={`mailto:${siteConfig.email}?subject=${encodeURIComponent("Project Inquiry — " + (formData.service || "General"))}&body=${encodeURIComponent(
-                        "Hi ZHS AI Agency,\n\n" +
-                        "Name: " + formData.fullName + "\n" +
-                        (formData.company ? "Company: " + formData.company + "\n" : "") +
-                        "Email: " + formData.email + "\n" +
-                        "Country: " + formData.country + "\n" +
-                        (formData.phone ? "Phone: " + formData.phone + "\n" : "") +
-                        "Service: " + formData.service + "\n" +
-                        (formData.budget ? "Budget: " + formData.budget + "\n" : "") +
-                        "\nProject Details:\n" + formData.description + "\n"
-                      )}`}
+                    <button
+                      onClick={() => setFormState("idle")}
                       className="btn-primary"
                     >
-                      <Mail className="h-4 w-4" />
-                      Email {siteConfig.email}
+                      Try Again
                       <ArrowRight className="h-4 w-4" />
-                    </a>
-                    <button
-                      onClick={() => {
-                        setShowEmailCta(false);
-                        setFormData(initialFormData);
-                      }}
+                    </button>
+                    <a
+                      href={`mailto:${siteEmail}?subject=${encodeURIComponent("Project Inquiry")}`}
                       className="text-sm text-zhs-muted hover:text-zhs-accent transition-colors"
                     >
-                      Edit your details
-                    </button>
+                      Or email us directly at {siteEmail}
+                    </a>
                   </div>
                 </div>
               ) : (
@@ -408,10 +438,20 @@ export default function Contact() {
                     <div className="pt-2">
                       <button
                         type="submit"
-                        className="btn-primary w-full sm:w-auto"
+                        disabled={formState === "submitting"}
+                        className="btn-primary w-full sm:w-auto disabled:opacity-50"
                       >
-                        Prepare Email
-                        <Send className="h-4 w-4" />
+                        {formState === "submitting" ? (
+                          <>
+                            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            Send Message
+                            <Send className="h-4 w-4" />
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
@@ -429,7 +469,7 @@ export default function Contact() {
 
                   <div className="space-y-5">
                     <a
-                      href={`mailto:${siteConfig.email}`}
+                      href={`mailto:${siteEmail}`}
                       className="flex items-center gap-4 group"
                     >
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zhs-accent/10 text-zhs-accent transition-colors group-hover:bg-zhs-accent/20">
@@ -440,7 +480,7 @@ export default function Contact() {
                           Email
                         </p>
                         <p className="dark:text-zhs-white text-slate-900 text-sm font-medium transition-colors group-hover:text-zhs-accent">
-                          {siteConfig.email}
+                          {siteEmail}
                         </p>
                       </div>
                     </a>
@@ -525,11 +565,11 @@ export default function Contact() {
                     You can also reach us directly at:
                   </p>
                   <a
-                    href={`mailto:${siteConfig.email}`}
+                    href={`mailto:${siteEmail}`}
                     className="btn-primary w-full"
                   >
                     <Mail className="h-4 w-4" />
-                    {siteConfig.email}
+                    {siteEmail}
                   </a>
                 </div>
               </div>
