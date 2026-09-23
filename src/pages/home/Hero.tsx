@@ -119,8 +119,8 @@ export default function Hero() {
 
             <ScrollReveal delay={300}>
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link to="/contact" className="btn-primary">
-                  Start a Project
+                <Link to="/free-ai-audit" className="btn-primary">
+                  Get Free AI Audit
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link to="/ai-automation" className="btn-secondary">

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Filter } from "lucide-react";
+import { ArrowRight, Filter, Layers } from "lucide-react";
 import ScrollReveal from "../components/animations/ScrollReveal";
 import Container from "../components/ui/Container";
 import { SectionWrapper } from "../components/ui/SectionHeading";
@@ -8,34 +8,12 @@ import Seo from "../components/ui/Seo";
 import PageHero from "../components/ui/PageHero";
 import CtaSection from "../components/ui/CtaSection";
 import { useCaseStudies, type CaseStudy } from "../hooks/useCaseStudies";
-
-const categoryFilters = ["All", "AI & Automation", "Web Development", "Mobile Apps", "Technology", "Digital Growth", "Creative", "3D Studio"];
-
-const categoryColors: Record<string, string> = {
-  "AI & Automation": "bg-zhs-accent/10 text-zhs-accent",
-  "AI Automation": "bg-zhs-accent/10 text-zhs-accent",
-  Technology: "bg-zhs-blue/10 text-zhs-blue",
-  Creative: "bg-zhs-violet/10 text-zhs-violet",
-  "3D Studio": "bg-zhs-cyan/10 text-zhs-cyan",
-  "Digital Growth": "bg-zhs-emerald/10 text-zhs-emerald",
-  "Mobile Apps": "bg-zhs-rose/10 text-zhs-rose",
-  "Mobile App Development": "bg-zhs-rose/10 text-zhs-rose",
-  "Web Development": "bg-zhs-amber/10 text-zhs-amber",
-};
-
-function matchesFilter(filter: string, category: string): boolean {
-  if (filter === "All") return true;
-  if (filter === "AI & Automation") {
-    return ["AI & Automation", "AI Automation", "Automation"].includes(category);
-  }
-  if (filter === "Mobile Apps") {
-    return ["Mobile Apps", "Mobile App Development"].includes(category);
-  }
-  if (filter === "Web Development") {
-    return ["Web Development", "Web"].includes(category);
-  }
-  return category === filter;
-}
+import {
+  WORK_FILTERS,
+  matchesFilter,
+  categoryBadgeClass,
+  categoryCoverStyle,
+} from "../lib/worksCategories";
 
 function toArray(val: string[] | unknown): string[] {
   if (Array.isArray(val)) return val as string[];
@@ -60,6 +38,23 @@ export default function Works() {
   const filteredWorks = useMemo(
     () => published.filter((w) => matchesFilter(selectedCategory, w.category)),
     [published, selectedCategory]
+  );
+
+  const counts = useMemo(() => {
+    const map: Record<string, number> = { All: published.length };
+    for (const w of published) {
+      for (const filter of WORK_FILTERS) {
+        if (filter !== "All" && matchesFilter(filter, w.category)) {
+          map[filter] = (map[filter] ?? 0) + 1;
+        }
+      }
+    }
+    return map;
+  }, [published]);
+
+  const visibleFilters = useMemo(
+    () => WORK_FILTERS.filter((f) => f === "All" || (counts[f] ?? 0) > 0 || f === selectedCategory),
+    [counts, selectedCategory]
   );
 
   return (
@@ -89,14 +84,21 @@ export default function Works() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
               <div className="flex shrink-0 items-center gap-2">
                 <Filter className="h-4 w-4 dark:text-zhs-muted text-slate-500" />
-                <span className="text-sm dark:text-zhs-muted text-slate-500">Filter by category</span>
+                <span className="text-sm dark:text-zhs-muted text-slate-500">
+                  Filter by category
+                  {!isLoading && (
+                    <span className="ml-2 text-zhs-accent">
+                      {filteredWorks.length} {filteredWorks.length === 1 ? "project" : "projects"}
+                    </span>
+                  )}
+                </span>
               </div>
               <div
                 className="flex flex-1 flex-wrap gap-2 sm:justify-end"
                 role="group"
                 aria-label="Filter works by category"
               >
-                {categoryFilters.map((cat) => (
+                {visibleFilters.map((cat) => (
                   <button
                     key={cat}
                     onClick={() => setSelectedCategory(cat)}
@@ -108,6 +110,17 @@ export default function Works() {
                     }`}
                   >
                     {cat}
+                    {counts[cat] !== undefined && counts[cat] > 0 && (
+                      <span
+                        className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold ${
+                          selectedCategory === cat
+                            ? "bg-white/20 text-white"
+                            : "dark:bg-zhs-dark-3 dark:text-zhs-muted bg-slate-100 text-slate-500"
+                        }`}
+                      >
+                        {counts[cat]}
+                      </span>
+                    )}
                   </button>
                 ))}
               </div>
@@ -128,11 +141,16 @@ export default function Works() {
             </div>
           ) : filteredWorks.length === 0 ? (
             <ScrollReveal>
-              <div className="py-16 text-center">
+              <div className="card-premium mx-auto max-w-xl py-16 text-center">
+                <div className="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-zhs-accent/10 text-zhs-accent">
+                  <Layers className="h-5 w-5" />
+                </div>
                 <p className="dark:text-zhs-muted text-slate-500 text-lg">
                   {published.length === 0
-                    ? "New work is on its way. In the meantime, explore our case studies."
-                    : "No projects found in this category."}
+                    ? "New work is on its way. Explore our case studies to see how we approach real business problems."
+                    : selectedCategory !== "All"
+                      ? `No published projects in ${selectedCategory} yet. Try another category or browse everything.`
+                      : "No projects found in this category."}
                 </p>
                 <div className="mt-6 flex flex-wrap justify-center gap-4">
                   <button onClick={() => setSelectedCategory("All")} className="btn-secondary">
@@ -141,6 +159,10 @@ export default function Works() {
                   <Link to="/case-studies" className="btn-secondary">
                     View Case Studies
                   </Link>
+                  <Link to="/free-ai-audit" className="btn-primary">
+                    Get Free AI Audit
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
               </div>
             </ScrollReveal>
@@ -148,18 +170,42 @@ export default function Works() {
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {filteredWorks.map((work: CaseStudy, i) => {
                 const techTags = toArray(work.tech_stack).slice(0, 3);
+                const cover = categoryCoverStyle(work.category);
                 return (
                   <ScrollReveal key={work.slug} delay={i * 80}>
                     <Link to={`/works/${work.slug}`} className="group block h-full">
-                      <article className="card-premium group flex h-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1">
-                        <div className="flex h-44 items-center justify-center overflow-hidden bg-slate-100 dark:bg-zhs-dark-3">
-                          <span className="text-6xl font-bold dark:text-zhs-accent/20 text-slate-300 group-hover:text-zhs-accent/30 transition-colors">
-                            {work.title.charAt(0)}
+                      <article className="card-premium group relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1">
+                        <div
+                          className="relative flex h-48 items-center justify-center overflow-hidden"
+                          style={cover}
+                        >
+                          <div
+                            className="absolute inset-0 opacity-30"
+                            style={{
+                              backgroundImage:
+                                "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.35) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.2) 0%, transparent 45%)",
+                            }}
+                          />
+                          <div
+                            className="absolute inset-0 opacity-20 transition-transform duration-500 group-hover:scale-105"
+                            style={{
+                              backgroundImage:
+                                "linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px)",
+                              backgroundSize: "28px 28px",
+                            }}
+                          />
+                          <div className="relative z-10 flex h-16 w-16 items-center justify-center rounded-2xl border border-white/30 bg-white/15 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                            <span className="text-2xl font-bold text-white">
+                              {work.title.charAt(0)}
+                            </span>
+                          </div>
+                          <span className="absolute bottom-3 left-3 rounded-full bg-black/25 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
+                            {work.category}
                           </span>
                         </div>
                         <div className="flex flex-1 flex-col p-6">
                           <div className="mb-3 flex flex-wrap items-center gap-2">
-                            <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${categoryColors[work.category] ?? "bg-zhs-accent/10 text-zhs-accent"}`}>
+                            <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${categoryBadgeClass(work.category)}`}>
                               {work.category}
                             </span>
                           </div>

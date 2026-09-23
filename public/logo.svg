@@ -1,8 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 30 260 260" fill="none">
+<svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ZHS AI Agency">
   <defs>
     <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#0EA5E9"/>
       <stop offset="100%" stop-color="#4338CA"/>
+    </linearGradient>
+    <linearGradient id="letterGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#1E293B"/>
     </linearGradient>
   </defs>
   <g transform="translate(50,40)">
@@ -14,4 +18,9 @@
     <circle cx="45" cy="175" r="4" fill="#ffffff" opacity="0.6"/>
     <text x="120" y="148" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="80" fill="#ffffff">ZHS</text>
   </g>
+  <g transform="translate(320,140)">
+    <text x="0" y="0" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="64" fill="url(#letterGrad)" letter-spacing="2">ZHS</text>
+    <text x="0" y="42" font-family="Arial, Helvetica, sans-serif" font-weight="500" font-size="24" fill="#4338CA" letter-spacing="8">AI  AGENCY</text>
+  </g>
+  <text x="320" y="205" font-family="Arial, Helvetica, sans-serif" font-weight="400" font-size="16" fill="#6B7280" letter-spacing="1">Intelligent Solutions. Real Results.</text>
 </svg>

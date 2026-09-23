@@ -30,6 +30,9 @@ const categoryColorMap: Record<string, string> = {
   Creative: "bg-zhs-violet/10 text-zhs-violet",
   "3D Studio": "bg-zhs-cyan/10 text-zhs-cyan",
   "Digital Growth": "bg-zhs-emerald/10 text-zhs-emerald",
+  "Web Development": "bg-zhs-amber/10 text-zhs-amber",
+  "Mobile Apps": "bg-zhs-rose/10 text-zhs-rose",
+  "Mobile App Development": "bg-zhs-rose/10 text-zhs-rose",
 };
 
 const fallbackProjects = [

@@ -1,0 +1,25 @@
+<svg viewBox="0 0 900 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ZHS AI Agency">
+  <defs>
+    <linearGradient id="badgeGradNavDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0EA5E9"/>
+      <stop offset="100%" stop-color="#4338CA"/>
+    </linearGradient>
+    <linearGradient id="letterGradNavDark" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F5F5FF"/>
+      <stop offset="100%" stop-color="#E0E0EE"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(50,40)">
+    <circle cx="120" cy="120" r="115" fill="url(#badgeGradNavDark)"/>
+    <ellipse cx="120" cy="120" rx="98" ry="98" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+    <circle cx="120" cy="22" r="9" fill="#ffffff"/>
+    <circle cx="120" cy="22" r="9" fill="#00E5FF" opacity="0.9"/>
+    <circle cx="210" cy="150" r="5" fill="#ffffff" opacity="0.7"/>
+    <circle cx="45" cy="175" r="4" fill="#ffffff" opacity="0.6"/>
+    <text x="120" y="148" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="80" fill="#ffffff">ZHS</text>
+  </g>
+  <g transform="translate(320,140)">
+    <text x="0" y="0" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="64" fill="url(#letterGradNavDark)" letter-spacing="2">ZHS</text>
+    <text x="0" y="42" font-family="Arial, Helvetica, sans-serif" font-weight="500" font-size="24" fill="#818CF8" letter-spacing="8">AI  AGENCY</text>
+  </g>
+</svg>

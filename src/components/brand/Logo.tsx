@@ -1,8 +1,8 @@
 import { useTheme } from "../../context/useTheme";
-import darkLogo from "../../assets/brand/zhs-ai-agency-logo-dark.svg";
-import lightLogo from "../../assets/brand/zhs-ai-agency-logo-light.svg";
-import darkLogoNav from "../../assets/brand/zhs-ai-agency-logo-dark-nav.svg";
-import lightLogoNav from "../../assets/brand/zhs-ai-agency-logo-light-nav.svg";
+import darkLogo from "../../assets/brand/zhs-ai-agency-logo-v2-dark.svg";
+import lightLogo from "../../assets/brand/zhs-ai-agency-logo-v2.svg";
+import darkLogoNav from "../../assets/brand/zhs-ai-agency-logo-v2-nav-dark.svg";
+import lightLogoNav from "../../assets/brand/zhs-ai-agency-logo-v2-nav.svg";
 
 interface LogoProps {
   className?: string;
@@ -18,8 +18,10 @@ export default function Logo({ className = "", tagline = true }: LogoProps) {
       <img
         src={src}
         alt="ZHS AI Agency"
-        className={`h-9 w-auto lg:h-[46px] ${className}`}
+        className={`h-10 w-auto lg:h-12 ${className}`}
         loading="eager"
+        width={180}
+        height={58}
       />
     );
   }
@@ -29,8 +31,10 @@ export default function Logo({ className = "", tagline = true }: LogoProps) {
     <img
       src={src}
       alt="ZHS AI Agency"
-      className={`h-8 w-auto lg:h-9 ${className}`}
+      className={`h-14 w-auto lg:h-16 ${className}`}
       loading="eager"
+      width={225}
+      height={80}
     />
   );
 }

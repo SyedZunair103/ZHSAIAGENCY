@@ -13,8 +13,8 @@ interface CtaSectionProps {
 export default function CtaSection({
   heading = "Ready to Get Started?",
   subheading = "Let's discuss how we can help you build smarter, automate faster, and grow better.",
-  primaryLabel = "Start a Project",
-  primaryTo = "/contact",
+  primaryLabel = "Get Free AI Audit",
+  primaryTo = "/free-ai-audit",
 }: CtaSectionProps) {
   return (
     <section className="relative overflow-hidden py-20 md:py-28">

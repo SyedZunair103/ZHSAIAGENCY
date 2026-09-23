@@ -5,6 +5,7 @@ import ScrollReveal from "../../components/animations/ScrollReveal";
 import Container from "../../components/ui/Container";
 import SectionHeading from "../../components/ui/SectionHeading";
 import { supabase } from "../../lib/supabase";
+import { categoryBadgeClass, categoryCoverStyle } from "../../lib/worksCategories";
 
 interface DbCaseStudy {
   id: string;
@@ -65,16 +66,29 @@ export default function CaseStudiesPreview() {
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {(isLoading ? fallbackCaseStudies : caseStudies).map((cs, i) => {
+            const cover = categoryCoverStyle(cs.category);
             const inner = (
               <>
-                <div className="flex h-32 items-center justify-center rounded-xl border border-dashed dark:border-zhs-border border-slate-200 dark:bg-zhs-dark-3/50 bg-slate-50">
-                  <span className="text-xs dark:text-zhs-muted/60 text-slate-400">{cs.status}</span>
+                <div
+                  className="relative flex h-36 items-center justify-center overflow-hidden rounded-xl"
+                  style={cover}
+                >
+                  <div
+                    className="absolute inset-0 opacity-25"
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, transparent 45%)",
+                    }}
+                  />
+                  <span className="relative z-10 rounded-full bg-black/20 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+                    {cs.status}
+                  </span>
                 </div>
                 <div className="mt-4">
-                  <span className="text-[11px] font-semibold uppercase tracking-wider text-zhs-accent/80">
+                  <span className={`inline-block rounded-full px-2.5 py-1 text-[11px] font-semibold ${categoryBadgeClass(cs.category)}`}>
                     {cs.category}
                   </span>
-                  <h3 className="mt-1 text-base font-semibold dark:text-zhs-white text-slate-900">{cs.title}</h3>
+                  <h3 className="mt-2 text-base font-semibold dark:text-zhs-white text-slate-900">{cs.title}</h3>
                 </div>
                 <div className="mt-3 flex items-center gap-1 text-xs dark:text-zhs-muted text-slate-500 transition-colors group-hover:text-zhs-accent">
                   <span>View Work</span>
@@ -85,7 +99,7 @@ export default function CaseStudiesPreview() {
             return (
               <ScrollReveal key={cs.title} delay={i * 60}>
                 {cs.slug ? (
-                  <Link to={`/works/${cs.slug}`} className="group card-premium block h-full">
+                  <Link to={`/works/${cs.slug}`} className="group card-premium block h-full transition-all duration-300 group-hover:-translate-y-1">
                     {inner}
                   </Link>
                 ) : (

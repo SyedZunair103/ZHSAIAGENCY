@@ -8,6 +8,7 @@ import Seo from "../components/ui/Seo";
 import PageHero from "../components/ui/PageHero";
 import CtaSection from "../components/ui/CtaSection";
 import { useCaseStudies, type CaseStudy } from "../hooks/useCaseStudies";
+import { categoryBadgeClass, categoryCoverStyle } from "../lib/worksCategories";
 
 function toArray(val: string[] | unknown): string[] {
   if (Array.isArray(val)) return val as string[];
@@ -93,7 +94,7 @@ export default function WorksDetail() {
         subheading={work.subtitle}
       >
         <div className="mt-6 flex flex-wrap gap-3">
-          <span className="rounded-full bg-zhs-accent/10 px-3 py-1 text-xs font-semibold text-zhs-accent">
+          <span className={`rounded-full px-3 py-1 text-xs font-semibold ${categoryBadgeClass(work.category)}`}>
             {work.category}
           </span>
           <span className="rounded-full border dark:border-zhs-border border-slate-200 px-3 py-1 text-xs font-medium dark:text-zhs-muted text-slate-500">
@@ -299,19 +300,36 @@ export default function WorksDetail() {
               {related.map((r: CaseStudy, i) => (
                 <ScrollReveal key={r.slug} delay={i * 80}>
                   <Link to={`/works/${r.slug}`} className="group block h-full">
-                    <div className="card-premium h-full p-6 transition-all duration-300 group-hover:-translate-y-1">
-                      <span className="rounded-full bg-zhs-accent/10 px-2.5 py-1 text-[11px] font-semibold text-zhs-accent">
-                        {r.category}
-                      </span>
-                      <h3 className="mt-3 font-bold dark:text-zhs-white text-slate-900 group-hover:text-zhs-accent transition-colors">
-                        {r.title}
-                      </h3>
-                      <p className="mt-2 dark:text-zhs-muted text-slate-500 text-sm leading-relaxed line-clamp-2">
-                        {r.subtitle}
-                      </p>
-                      <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-zhs-accent transition-all duration-300 group-hover:gap-2">
-                        View Work
-                        <ArrowRight className="h-4 w-4" />
+                    <div className="card-premium group h-full overflow-hidden p-0 transition-all duration-300 group-hover:-translate-y-1">
+                      <div
+                        className="relative flex h-28 items-center justify-center overflow-hidden"
+                        style={categoryCoverStyle(r.category)}
+                      >
+                        <div
+                          className="absolute inset-0 opacity-25"
+                          style={{
+                            backgroundImage:
+                              "radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, transparent 45%)",
+                          }}
+                        />
+                        <span className="relative z-10 rounded-full bg-black/20 px-3 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
+                          {r.category}
+                        </span>
+                      </div>
+                      <div className="p-6">
+                        <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${categoryBadgeClass(r.category)}`}>
+                          {r.category}
+                        </span>
+                        <h3 className="mt-3 font-bold dark:text-zhs-white text-slate-900 group-hover:text-zhs-accent transition-colors">
+                          {r.title}
+                        </h3>
+                        <p className="mt-2 dark:text-zhs-muted text-slate-500 text-sm leading-relaxed line-clamp-2">
+                          {r.subtitle}
+                        </p>
+                        <div className="mt-4 flex items-center gap-1 text-sm font-semibold text-zhs-accent transition-all duration-300 group-hover:gap-2">
+                          View Work
+                          <ArrowRight className="h-4 w-4" />
+                        </div>
                       </div>
                     </div>
                   </Link>
