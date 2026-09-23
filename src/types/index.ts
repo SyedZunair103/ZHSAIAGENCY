@@ -3,6 +3,23 @@ export interface NavLink {
   path: string;
 }
 
+export interface NavGroup {
+  label: string;
+  path?: string;
+  items: NavItem[];
+}
+
+export interface NavItem {
+  label: string;
+  path: string;
+  items?: NavItem[];
+}
+
+export interface ServiceCategory {
+  label: string;
+  services: Service[];
+}
+
 export interface Service {
   title: string;
   description: string;
@@ -16,7 +33,25 @@ export interface SiteConfig {
   description: string;
   email: string;
   siteUrl: string;
-  navLinks: NavLink[];
+  navGroups: NavGroup[];
   services: Service[];
   socialLinks: Record<string, string>;
+}
+
+export interface Industry {
+  slug: string;
+  title: string;
+  description: string;
+  icon: string;
+  challenges: string[];
+  solutions: string[];
+  services: string[];
+  outcomes: string[];
+}
+
+export interface SolutionItem {
+  slug: string;
+  title: string;
+  description: string;
+  icon: string;
 }

@@ -9,7 +9,6 @@ import ThreeDStudio from "./pages/ThreeDStudio";
 import DigitalGrowth from "./pages/DigitalGrowth";
 import Industries from "./pages/Industries";
 import CaseStudies from "./pages/CaseStudies";
-import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
 import BlogPostPage from "./pages/BlogPost";
@@ -17,6 +16,19 @@ import Faqs from "./pages/Faqs";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
+
+// New public pages
+import Works from "./pages/Works";
+import WorksDetail from "./pages/WorksDetail";
+import MobileAppDevelopment from "./pages/MobileAppDevelopment";
+import AboutZHS from "./pages/AboutZHS";
+import AiFirstCompany from "./pages/AiFirstCompany";
+import WhyZHS from "./pages/WhyZHS";
+import Process from "./pages/Process";
+import FreeAIAudit from "./pages/FreeAIAudit";
+import IndustryDetail from "./pages/IndustryDetail";
+import SolutionDetail from "./pages/SolutionDetail";
+import Team from "./pages/Team";
 
 // Admin pages
 import AdminLayout from "./components/admin/Layout";
@@ -47,6 +59,7 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/solutions" element={<Solutions />} />
+        <Route path="/solutions/:slug" element={<SolutionDetail />} />
         <Route path="/ai-automation" element={<AiAutomation />} />
         <Route path="/technology" element={<Technology />} />
         <Route path="/creative" element={<Creative />} />
@@ -54,7 +67,17 @@ export default function App() {
         <Route path="/digital-growth" element={<DigitalGrowth />} />
         <Route path="/industries" element={<Industries />} />
         <Route path="/case-studies" element={<CaseStudies />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/works" element={<Works />} />
+        <Route path="/works/:slug" element={<WorksDetail />} />
+        <Route path="/services/mobile-app-development" element={<MobileAppDevelopment />} />
+        <Route path="/about-us" element={<AboutZHS />} />
+        <Route path="/about-us/ai-first-company" element={<AiFirstCompany />} />
+        <Route path="/about-us/why-zhs" element={<WhyZHS />} />
+        <Route path="/about-us/process" element={<Process />} />
+        <Route path="/about-us/team" element={<Team />} />
+        <Route path="/free-ai-audit" element={<FreeAIAudit />} />
+        <Route path="/about" element={<AboutZHS />} />
+        <Route path="/industries/:slug" element={<IndustryDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />

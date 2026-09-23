@@ -26,7 +26,7 @@ export default function AboutPreview() {
 
             <ScrollReveal delay={200}>
               <div className="mt-8">
-                <Link to="/about" className="btn-primary">
+                <Link to="/about-us" className="btn-primary">
                   Meet ZHS
                   <ArrowRight className="h-4 w-4" />
                 </Link>

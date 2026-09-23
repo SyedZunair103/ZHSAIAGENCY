@@ -36,7 +36,7 @@ const initial: FormState = {
   is_published: true,
 };
 
-const CATEGORIES = ["AI Automation", "Technology", "Creative", "3D Studio", "Digital Growth"];
+const CATEGORIES = ["AI Automation", "Technology", "Web Development", "Mobile Apps", "Creative", "3D Studio", "Digital Growth"];
 
 export default function CaseStudiesNew() {
   const navigate = useNavigate();

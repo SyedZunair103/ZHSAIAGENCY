@@ -6,11 +6,15 @@ import Container from "./Container";
 interface CtaSectionProps {
   heading?: string;
   subheading?: string;
+  primaryLabel?: string;
+  primaryTo?: string;
 }
 
 export default function CtaSection({
   heading = "Ready to Get Started?",
   subheading = "Let's discuss how we can help you build smarter, automate faster, and grow better.",
+  primaryLabel = "Start a Project",
+  primaryTo = "/contact",
 }: CtaSectionProps) {
   return (
     <section className="relative overflow-hidden py-20 md:py-28">
@@ -22,8 +26,8 @@ export default function CtaSection({
             <h2 className="section-heading">{heading}</h2>
             <p className="section-subheading mx-auto mt-6 max-w-xl">{subheading}</p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Link to="/contact" className="btn-primary">
-                Start a Project
+              <Link to={primaryTo} className="btn-primary">
+                {primaryLabel}
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link to="/contact" className="btn-secondary">

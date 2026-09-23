@@ -8,20 +8,27 @@ const footerNav = {
   solutions: [
     { label: "AI Automation", path: "/ai-automation" },
     { label: "Technology", path: "/technology" },
+    { label: "Mobile Apps", path: "/services/mobile-app-development" },
+    { label: "Digital Growth", path: "/digital-growth" },
     { label: "Creative", path: "/creative" },
     { label: "3D Studio", path: "/3d-studio" },
-    { label: "Digital Growth", path: "/digital-growth" },
+    { label: "All Solutions", path: "/solutions" },
   ],
   company: [
-    { label: "About", path: "/about" },
-    { label: "Case Studies", path: "/case-studies" },
+    { label: "About ZHS", path: "/about-us" },
+    { label: "AI-First Company", path: "/about-us/ai-first-company" },
+    { label: "Why ZHS", path: "/about-us/why-zhs" },
+    { label: "Our Process", path: "/about-us/process" },
+    { label: "Industries", path: "/industries" },
+    { label: "Works", path: "/works" },
     { label: "Blog", path: "/blog" },
     { label: "Contact", path: "/contact" },
   ],
   legal: [
+    { label: "Free AI Audit", path: "/free-ai-audit" },
+    { label: "FAQs", path: "/faqs" },
     { label: "Privacy Policy", path: "/privacy" },
     { label: "Terms of Service", path: "/terms" },
-    { label: "FAQs", path: "/faqs" },
   ],
 };
 
@@ -70,7 +77,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold uppercase tracking-wider dark:text-zhs-white text-slate-900">Legal</h3>
+            <h3 className="text-xs font-semibold uppercase tracking-wider dark:text-zhs-white text-slate-900">Explore</h3>
             <ul className="mt-4 space-y-2.5">
               {footerNav.legal.map((link) => (
                 <li key={link.path}>

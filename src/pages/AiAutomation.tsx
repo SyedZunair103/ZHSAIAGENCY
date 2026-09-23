@@ -363,6 +363,8 @@ export default function AiAutomation() {
       <CtaSection
         heading="Ready to Automate with Intelligence?"
         subheading="From a single AI agent to a fully automated operation, we'll help you build the systems that transform your business."
+        primaryLabel="Get Free AI Audit"
+        primaryTo="/free-ai-audit"
       />
     </>
   );

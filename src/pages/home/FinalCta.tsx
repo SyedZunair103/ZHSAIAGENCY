@@ -20,12 +20,12 @@ export default function FinalCta() {
               We&apos;ll help you turn the idea into a practical execution plan.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Link to="/contact" className="btn-primary">
-                Start a Project
+              <Link to="/free-ai-audit" className="btn-primary">
+                Get Free AI Audit
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link to="/contact" className="btn-secondary">
-                Talk to Our Team
+                Start a Project
               </Link>
             </div>
           </div>

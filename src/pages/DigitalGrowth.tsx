@@ -165,6 +165,8 @@ export default function DigitalGrowth() {
       <CtaSection
         heading="Ready to Build Your Growth Engine?"
         subheading="Let's audit your current marketing stack and identify the highest-leverage opportunities for sustainable, data-driven growth."
+        primaryLabel="Get Free AI Audit"
+        primaryTo="/free-ai-audit"
       />
     </>
   );

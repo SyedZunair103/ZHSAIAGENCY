@@ -23,7 +23,7 @@ interface FormState {
   is_published: boolean;
 }
 
-const CATEGORIES = ["AI Automation", "Technology", "Creative", "3D Studio", "Digital Growth"];
+const CATEGORIES = ["AI Automation", "Technology", "Web Development", "Mobile Apps", "Creative", "3D Studio", "Digital Growth"];
 
 export default function CaseStudiesEdit() {
   const { id } = useParams<{ id: string }>();

@@ -88,6 +88,7 @@ const pathMap: Record<string, string> = {
   creative: "/creative",
   "3d-studio": "/3d-studio",
   "digital-growth": "/digital-growth",
+  "mobile-app-development": "/services/mobile-app-development",
 };
 
 export default function Solutions() {
@@ -247,6 +248,8 @@ export default function Solutions() {
       <CtaSection
         heading="Let's Build Something Exceptional."
         subheading="Whether you need a single solution or a full digital transformation, we're ready to help you scale."
+        primaryLabel="Get Free AI Audit"
+        primaryTo="/free-ai-audit"
       />
     </>
   );

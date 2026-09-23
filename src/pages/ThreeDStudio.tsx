@@ -235,6 +235,8 @@ export default function ThreeDStudio() {
       <CtaSection
         heading="Ready to Bring Your Vision to Life?"
         subheading="Whether you need a single prototype or a full production run — our 3D studio team is ready to transform your ideas into reality."
+        primaryLabel="Get Free AI Audit"
+        primaryTo="/free-ai-audit"
       />
     </>
   );

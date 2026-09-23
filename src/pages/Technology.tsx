@@ -1,15 +1,23 @@
-import { Globe, Cloud, Smartphone, Settings, Database, LayoutDashboard, ShoppingCart, Workflow, Plug } from "lucide-react";
+import { Globe, Cloud, Smartphone, Settings, Database, LayoutDashboard, ShoppingCart, Workflow, Plug, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import ScrollReveal from "../components/animations/ScrollReveal";
 import { SectionWrapper } from "../components/ui/SectionHeading";
 import Seo from "../components/ui/Seo";
 import PageHero from "../components/ui/PageHero";
 import CtaSection from "../components/ui/CtaSection";
 
-const services = [
+interface TechService {
+  icon: typeof Globe;
+  title: string;
+  desc: string;
+  path?: string;
+}
+
+const services: TechService[] = [
   { icon: Globe, title: "Web Development", desc: "High-performance websites built with modern frameworks, optimized for speed and conversion." },
   { icon: LayoutDashboard, title: "Web Apps", desc: "Interactive single-page applications with real-time capabilities and rich user experiences." },
   { icon: Cloud, title: "SaaS Development", desc: "End-to-end SaaS platforms with billing, multi-tenancy, analytics, and scaling infrastructure." },
-  { icon: Smartphone, title: "Mobile Apps", desc: "Native and cross-platform mobile applications for iOS and Android with seamless UX." },
+  { icon: Smartphone, title: "Mobile App Development", desc: "Business, customer-facing, and AI-powered mobile applications for iOS and Android — built cross-platform.", path: "/services/mobile-app-development" },
   { icon: Settings, title: "Custom Software", desc: "Purpose-built software solutions tailored to your unique business operations and workflows." },
   { icon: Plug, title: "APIs", desc: "RESTful and GraphQL APIs built for reliability, documentation, and third-party integration." },
   { icon: Database, title: "Backend Systems", desc: "Scalable server architectures handling millions of requests with fault-tolerant design." },
@@ -67,17 +75,34 @@ export default function Technology() {
         </ScrollReveal>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {services.map((s, i) => (
-            <ScrollReveal key={s.title} delay={i * 50}>
+          {services.map((s, i) => {
+            const card = (
               <div className="card-premium group h-full">
-                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-zhs-accent/10 text-zhs-accent transition-all duration-300 group-hover:bg-zhs-accent/20 group-hover:scale-110">
+                <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-zhs-accent/10 text-zhs-accent transition-colors duration-300 group-hover:bg-zhs-accent/20 group-hover:scale-110">
                   <s.icon className="h-5 w-5" />
                 </div>
                 <h3 className="text-lg font-semibold dark:text-zhs-white text-slate-900">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed dark:text-zhs-muted text-slate-500">{s.desc}</p>
+                {s.path && (
+                  <span className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-zhs-accent transition-all duration-300 group-hover:gap-2">
+                    Learn more
+                    <ArrowRight className="h-4 w-4" />
+                  </span>
+                )}
               </div>
-            </ScrollReveal>
-          ))}
+            );
+            return (
+              <ScrollReveal key={s.title} delay={i * 50}>
+                {s.path ? (
+                  <Link to={s.path} className="block h-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zhs-accent">
+                    {card}
+                  </Link>
+                ) : (
+                  card
+                )}
+              </ScrollReveal>
+            );
+          })}
         </div>
       </SectionWrapper>
 
@@ -175,6 +200,8 @@ export default function Technology() {
       <CtaSection
         heading="Let's Build Something Exceptional."
         subheading="Whether you need a complete SaaS platform, a high-performance web app, or backend systems that scale — we're ready to engineer your next breakthrough."
+        primaryLabel="Get Free AI Audit"
+        primaryTo="/free-ai-audit"
       />
     </>
   );

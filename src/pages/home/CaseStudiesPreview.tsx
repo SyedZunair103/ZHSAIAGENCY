@@ -15,11 +15,11 @@ interface DbCaseStudy {
 }
 
 const fallbackCaseStudies = [
-  { title: "AI Customer Support System", category: "AI Automation", status: "Coming Soon" },
-  { title: "Automated Lead Qualification", category: "Automation", status: "Coming Soon" },
-  { title: "SaaS Product Development", category: "Technology", status: "Coming Soon" },
-  { title: "3D Product Visualization", category: "3D Studio", status: "Coming Soon" },
-  { title: "Brand & Growth System", category: "Creative + Growth", status: "Coming Soon" },
+  { title: "AI Customer Support System", category: "AI Automation", status: "Coming Soon", slug: "" },
+  { title: "Automated Lead Qualification", category: "Automation", status: "Coming Soon", slug: "" },
+  { title: "SaaS Product Development", category: "Technology", status: "Coming Soon", slug: "" },
+  { title: "3D Product Visualization", category: "3D Studio", status: "Coming Soon", slug: "" },
+  { title: "Brand & Growth System", category: "Creative + Growth", status: "Coming Soon", slug: "" },
 ];
 
 export default function CaseStudiesPreview() {
@@ -33,7 +33,7 @@ export default function CaseStudiesPreview() {
         .select("id, title, subtitle, slug, category")
         .eq("is_published", true)
         .order("display_order", { ascending: true })
-        .limit(5);
+        .limit(6);
 
       if (error || !data || data.length === 0) {
         setCaseStudies(fallbackCaseStudies);
@@ -42,6 +42,7 @@ export default function CaseStudiesPreview() {
           title: cs.title,
           category: cs.category,
           status: "View Details",
+          slug: cs.slug,
         }));
         setCaseStudies(mapped);
       }
@@ -56,16 +57,16 @@ export default function CaseStudiesPreview() {
       <Container>
         <ScrollReveal>
           <SectionHeading
-            eyebrow="Case Studies"
-            heading="What We Build."
-            subheading="Real projects showcasing our capabilities across AI, technology, and creative."
+            eyebrow="Works"
+            heading="Work That Solves Real Business Problems."
+            subheading="Selected projects across AI automation, technology, mobile apps, creative, and growth."
           />
         </ScrollReveal>
 
         <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {(isLoading ? fallbackCaseStudies : caseStudies).map((cs, i) => (
-            <ScrollReveal key={cs.title} delay={i * 60}>
-              <div className="group card-premium h-full">
+          {(isLoading ? fallbackCaseStudies : caseStudies).map((cs, i) => {
+            const inner = (
+              <>
                 <div className="flex h-32 items-center justify-center rounded-xl border border-dashed dark:border-zhs-border border-slate-200 dark:bg-zhs-dark-3/50 bg-slate-50">
                   <span className="text-xs dark:text-zhs-muted/60 text-slate-400">{cs.status}</span>
                 </div>
@@ -76,18 +77,29 @@ export default function CaseStudiesPreview() {
                   <h3 className="mt-1 text-base font-semibold dark:text-zhs-white text-slate-900">{cs.title}</h3>
                 </div>
                 <div className="mt-3 flex items-center gap-1 text-xs dark:text-zhs-muted text-slate-500 transition-colors group-hover:text-zhs-accent">
-                  <span>View Details</span>
+                  <span>View Work</span>
                   <ExternalLink className="h-3 w-3" />
                 </div>
-              </div>
-            </ScrollReveal>
-          ))}
+              </>
+            );
+            return (
+              <ScrollReveal key={cs.title} delay={i * 60}>
+                {cs.slug ? (
+                  <Link to={`/works/${cs.slug}`} className="group card-premium block h-full">
+                    {inner}
+                  </Link>
+                ) : (
+                  <div className="group card-premium h-full">{inner}</div>
+                )}
+              </ScrollReveal>
+            );
+          })}
         </div>
 
         <ScrollReveal delay={400}>
           <div className="mt-12 text-center">
-            <Link to="/case-studies" className="btn-secondary">
-              View All Case Studies
+            <Link to="/works" className="btn-secondary">
+              View All Works
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

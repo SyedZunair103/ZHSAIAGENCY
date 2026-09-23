@@ -188,6 +188,8 @@ export default function Creative() {
       <CtaSection
         heading="Ready to Elevate Your Brand?"
         subheading="Whether you're building from scratch or refining an existing identity — we create the visual experiences that make people stop, look, and remember."
+        primaryLabel="Get Free AI Audit"
+        primaryTo="/free-ai-audit"
       />
     </>
   );

@@ -7,36 +7,7 @@
 -- ============================================================
 
 -- ============================================================
--- 1. HELPER FUNCTIONS (SECURITY DEFINER)
--- ============================================================
-
--- Returns the role of the currently authenticated user.
--- SECURITY DEFINER prevents RLS recursion when policies call this.
--- STABLE allows PostgreSQL to optimize repeated calls within a query.
--- SET search_path = public prevents search path manipulation attacks.
-CREATE OR REPLACE FUNCTION public.get_user_role()
-RETURNS text
-STABLE
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path = public
-AS $$
-  SELECT role FROM public.profiles WHERE id = auth.uid();
-$$;
-
--- Convenience function: is the current user an admin?
-CREATE OR REPLACE FUNCTION public.is_admin()
-RETURNS boolean
-STABLE
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path = public
-AS $$
-  SELECT public.get_user_role() = 'admin';
-$$;
-
--- ============================================================
--- 2. TABLES
+-- 1. TABLES (profiles first — required by helper functions)
 -- ============================================================
 
 -- -----------------------------------------------------------
@@ -164,6 +135,35 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
 );
 
 COMMENT ON TABLE public.site_settings IS 'Key-value site settings. Public read; admin write.';
+
+-- ============================================================
+-- 2. HELPER FUNCTIONS (SECURITY DEFINER)
+-- ============================================================
+
+-- Returns the role of the currently authenticated user.
+-- SECURITY DEFINER prevents RLS recursion when policies call this.
+-- STABLE allows PostgreSQL to optimize repeated calls within a query.
+-- SET search_path = public prevents search path manipulation attacks.
+CREATE OR REPLACE FUNCTION public.get_user_role()
+RETURNS text
+STABLE
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT role FROM public.profiles WHERE id = auth.uid();
+$$;
+
+-- Convenience function: is the current user an admin?
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean
+STABLE
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT public.get_user_role() = 'admin';
+$$;
 
 -- ============================================================
 -- 3. INDEXES
