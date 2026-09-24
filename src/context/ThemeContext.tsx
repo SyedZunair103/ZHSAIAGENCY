@@ -5,7 +5,7 @@ function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "dark";
   const saved = localStorage.getItem("zhs-theme") as Theme | null;
   if (saved === "light" || saved === "dark") return saved;
-  return window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  return "dark";
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
@@ -21,10 +21,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: light)");
-    const handler = (e: MediaQueryListEvent) => {
-      if (!localStorage.getItem("zhs-theme")) {
-        setTheme(e.matches ? "light" : "dark");
-      }
+    const handler = () => {
+      if (!localStorage.getItem("zhs-theme")) setTheme("dark");
     };
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);

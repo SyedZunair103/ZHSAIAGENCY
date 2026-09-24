@@ -41,9 +41,11 @@ export default function Footer() {
   const siteDescription = get("description", "ZHS AI Agency builds intelligent AI systems, automation workflows, digital products, creative experiences and growth solutions for modern businesses.");
 
   return (
-    <footer className="relative border-t dark:border-zhs-border dark:bg-zhs-black border-slate-200 bg-slate-50">
+    <footer className="relative overflow-hidden border-t dark:border-zhs-border dark:bg-zhs-black border-slate-200 bg-[#eef1f7]">
+      <div className="pointer-events-none absolute inset-0 grid-pattern opacity-[0.06]" aria-hidden="true" />
+      <div className="pointer-events-none absolute -top-40 left-1/4 h-80 w-80 rounded-full bg-zhs-accent/10 blur-[120px]" aria-hidden="true" />
       <Container>
-        <div className="grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-4">
+        <div className="relative grid gap-10 py-16 md:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-2 group" aria-label="ZHS AI Agency Home">
               <Logo />
@@ -96,7 +98,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t dark:border-zhs-border border-slate-200 py-6 text-center text-xs dark:text-zhs-muted/50 text-slate-400">
+        <div className="relative border-t dark:border-zhs-border border-slate-200 py-6 text-center text-xs dark:text-zhs-muted/50 text-slate-400">
           &copy; {new Date().getFullYear()} {siteName}. All rights reserved.
         </div>
       </Container>

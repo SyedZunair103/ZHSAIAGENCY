@@ -273,12 +273,14 @@ export default function Navbar() {
       <nav
         ref={navRef}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled || isOpen ? "glass-strong shadow-lg" : "bg-transparent"
+          scrolled || isOpen
+            ? "glass-strong"
+            : "bg-transparent border-b border-transparent"
         }`}
         aria-label="Main navigation"
       >
         <Container>
-          <div className="flex h-18 items-center justify-between lg:h-20">
+          <div className="flex h-20 items-center justify-between lg:h-[88px]">
             <Link to="/" className="flex shrink-0 items-center gap-2 group" aria-label="ZHS AI Agency Home">
               <Logo tagline={false} />
             </Link>
@@ -339,7 +341,7 @@ export default function Navbar() {
 
       <div
         id="mobile-menu"
-        className={`fixed inset-x-0 top-18 bottom-0 z-40 overflow-y-auto overscroll-contain lg:hidden transition-all duration-300 ${
+        className={`fixed inset-x-0 top-20 bottom-0 z-40 overflow-y-auto overscroll-contain lg:hidden transition-all duration-300 ${
           isOpen ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0 pointer-events-none"
         }`}
       >

@@ -84,10 +84,11 @@ function HeroVisual() {
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden pt-16 lg:pt-18">
-      <div className="absolute inset-0 grid-pattern opacity-20" />
-      <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-zhs-accent/5 blur-[120px]" />
-      <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-zhs-cyan/5 blur-[120px]" />
+    <section className="relative min-h-screen flex items-center overflow-hidden pt-24 lg:pt-28">
+      <div className="absolute inset-0 grid-pattern opacity-15" aria-hidden="true" />
+      <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-zhs-accent/8 blur-[140px]" aria-hidden="true" />
+      <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-zhs-cyan/6 blur-[140px]" aria-hidden="true" />
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-zhs-accent/35 to-transparent" aria-hidden="true" />
 
       <Container className="relative z-10">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 lg:items-center">
