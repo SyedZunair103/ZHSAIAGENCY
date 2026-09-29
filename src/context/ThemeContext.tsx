@@ -3,7 +3,7 @@ import { ThemeContext, type Theme } from "./theme-context";
 
 function getInitialTheme(): Theme {
   if (typeof window === "undefined") return "dark";
-  const saved = localStorage.getItem("zhs-theme") as Theme | null;
+  const saved = localStorage.getItem("zhs-theme-v2") as Theme | null;
   if (saved === "light" || saved === "dark") return saved;
   return "dark";
 }
@@ -16,13 +16,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     root.classList.remove("dark", "light");
     root.classList.add(theme);
     root.setAttribute("data-theme", theme);
-    localStorage.setItem("zhs-theme", theme);
+    localStorage.setItem("zhs-theme-v2", theme);
   }, [theme]);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: light)");
     const handler = () => {
-      if (!localStorage.getItem("zhs-theme")) setTheme("dark");
+      if (!localStorage.getItem("zhs-theme-v2")) setTheme("dark");
     };
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
